@@ -18,14 +18,14 @@ public class MainGame {
     private static int Gun = 0; // Your bonus to hit
     private static int Defence = 0; // Your armor
     private static int ENB = 15;  // Amount of damage enemy can sustain
-    private static int EDV = 0; // enemy dodge value
+    private static int EDV = 5; // enemy dodge value
     private static int EGun = 0; // enemy gun bonus
-    private static int EDefence = 0; // enemy armor
+    private static int EDefence = 1; // enemy armor
+    private static int MISS = 2; // Where 0 = a miss and 1 = is a glance and 2 = nil.
 	private static Scanner scanner;
 	private static String userInput;
 	private static boolean gameRunning = true;
 	private static String[] userActionsArray;
-	
 	public static void main(String[] args) throws IOException {
 		
 		//Initializes input object for text input
@@ -34,7 +34,7 @@ public class MainGame {
 		userInput = "";
 		
 		//Define your game player here (health/name/description/etc...
-
+		int damage = 0;
 		
 		//Define your enemy here (health/name/description/etc...
 		
@@ -47,22 +47,33 @@ public class MainGame {
 		
 		//This is where the game starts
 		
-		while(gameRunning)
+		for(;gameRunning;)
 		{
-			System.out.println("Round Start");
-			System.out.println("Set Your Stats");
+		    outputText("Round Start",50);
+			outputText("Assign your crew to stations.",50);
+			
 			getStats(NB);
 			System.out.println("COMBAT");
-			userInput = getUserInput("Enter Input: ");
-			if(userInput == "fire" || userInput == "Fire" || userInput == "FIRE")
-				ENB = returnNB(EDV, Gun, EDefence);
-			outputText(userInput, 50);
 			
+			userInput = getUserInput("Enter Input: ");
+			
+			if(userInput == "fire" || userInput == "Fire" || userInput == "FIRE")
+				damage = returnNB(EDV, Gun, EDefence);
+			
+			if(MISS == 0) outputText("BOOM! The gun fires, but the shell goes wide, missing the enemy entirely!" , 50);
+			else if(MISS == 1) outputText("KABLAM! The gun fires, but the shell merely glances off the enemy armor!",50);
+			else if(damage < 5 && damage > 0) outputText("BLAM! The gun fires, and the shell puts a good sized dent in the enemy's armor!",50);
+			else if(damage < 7 && damage > 4) outputText("GOOBOOMM! The gun fires, and the shell puts a hole in the enemy hull!",50);
+			else if(damage < 10 && damage > 6) outputText("KABLOOM! The gun fires, tearing a large chunk out of the enemy vessel!",50);
+			else if(damage < 30 && damage > 9) outputText("SHABLAMO! The gun fires, smashing straight through the enemy hull!",50);
+			
+			ENB = ENB - damage;
 			
 			if(NB <= 0 || ENB <= 0) gameRunning = false;
 			//gameRunning = false; // <------- Ends the game when run
 		}
-		
+		if(NB <= 0) System.out.println("One horrendous BANG and your tank crumples like wet paper, trapping you inside as it slowly burns.");
+		if(ENB <= 0) System.out.println("A distant explosion, and the Sulphoric xclass explodes in a ball of bright light, you must have hit the fuel tank!");
 		//Game is over
 	}
 	
@@ -81,7 +92,7 @@ public class MainGame {
 	{
 		try {
 			
-			int lineLength = 20; //The width of any line of text
+			int lineLength = 100; //The width of any line of text
 			for(int i = 0; i < output.length(); i++)
 			{
 				System.out.print(output.charAt(i));  //Prints character in string at location i
@@ -108,49 +119,83 @@ public class MainGame {
 	public static int returnNB(int Dv, int Guns, int Armor)
 	{
 		int random = (int )(Math.random() * 20 + 1);
+		
 		if((random + Guns) > Dv) {
 		int damage = (int )(Math.random() * 8 + 1);
-		return (damage + Guns) - Armor; }
-		else return 0;
+		
+		if(((damage + Guns) - Armor) <= 0) MISS = 1;
+		
+		else MISS = 2;
+		return ((damage + Guns) - Armor);
+		}
+		else {MISS = 0;
+	    return 0;}
 	}
 	public static void getStats(int EB)  // Where EB represents the number of crew.
 	{
 		boolean satisfied = false;
 		while (!satisfied)  {
 			int NewEB = EB;
+			int OldEb = EB;
 			int NewDV = 0;
 			int NewGun = 0;
 			int NewDefence = 0;
 		System.out.println("You have " + NewEB + " Crew left");
 		
-		System.out.println("Type in the amount of Crew you want to use for Dodge");
+		outputText("Type in the amount of Crew you want to use for Dodge",20);
+		
 		userInput = getUserInput("Enter Input: ");
-		if(NewEB >= 0) {
+		
 		NewEB = NewEB - Integer.parseInt(userInput);
+		
+		if(NewEB >= 0) {
+		
 		NewDV = Integer.parseInt(userInput);
-		System.out.println("Your Dodge value is: " + DV);
+		
+		System.out.println("Your Dodge value is: " + NewDV);
+		System.out.println("-----------------------------------------");
 		}
-		else System.out.println("You don't have enough Crew for that");
+		else  {System.out.println("You don't have enough Crew for that");
+		NewEB = OldEb; }
+		OldEb = NewEB;
 		
 		System.out.println("You have " + NewEB + " Crew left");
-		System.out.println("Type in the amount of Crew you want to use for Guns");
+		
+		outputText("Type in the amount of Crew you want to use for Guns",20);
+		
 		userInput = getUserInput("Enter Input: ");
-		if(NewEB >= 0) {
+		
 		NewEB = NewEB - Integer.parseInt(userInput);
+		
+		if(NewEB >= 0) {
+		
 		NewGun = Integer.parseInt(userInput);
-		System.out.println("Your Targeting bonus is: " + Gun);
+		
+		System.out.println("Your Targeting bonus is: " + NewGun);
+		System.out.println("-----------------------------------------");
 		}
-		else System.out.println("You don't have enough Crew for that");
+		else {System.out.println("You don't have enough Crew for that");
+		NewEB = OldEb; }
+		OldEb = NewEB;
 		
 		System.out.println("You have " + NewEB + " Crew left");
-		System.out.println("Type in the amount of Crew you want to use for Armor");
+		
+		outputText("Type in the amount of Crew you want to use for Armor",20);
+		
 		userInput = getUserInput("Enter Input: ");
-		if(NewEB >= 0) {
+		
 		NewEB = NewEB - Integer.parseInt(userInput);
+		
+		if(NewEB >= 0) {
+		
 		NewDefence = Integer.parseInt(userInput);
-		System.out.println("Your Targeting bonus is: " + Defence);
+		
+		System.out.println("Your Targeting bonus is: " + NewDefence);
+		System.out.println("-----------------------------------------");
 		}
-		else System.out.println("You don't have enough Crew for that");
+		else {System.out.println("You don't have enough Crew for that");
+		NewEB = OldEb;}
+		OldEb = NewEB;
 		
 		System.out.println("Your Dodge: " + NewDV + " Your target bonus: " + NewGun + " Your Armor Bonus: " + NewDefence);
 		System.out.println("====================================================================");
@@ -161,7 +206,7 @@ public class MainGame {
 		Gun = NewGun;
 		Defence = NewDefence;
 		
-		if((userInput == "Yes" )||( userInput == "yes")) {satisfied = true;}
+		if((userInput.equals("Yes") )||( userInput.equals("yes"))) satisfied = true;
 	}
 	}
 	
