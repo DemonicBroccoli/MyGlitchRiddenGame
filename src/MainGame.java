@@ -13,28 +13,27 @@ import java.util.Scanner;
  * see fit here.
  */
 public class MainGame {
-    private static int NB = 15; // Amount of damage you can sustain and the amount of points you can spend on stats
+    private static int damage = 0;
+	private static int NB = 15; // Amount of damage you can sustain and the amount of points you can spend on stats
     private static int DV = 0; // Your dodge
     private static int Gun = 0; // Your bonus to hit
     private static int Defence = 0; // Your armor
     private static int ENB = 15;  // Amount of damage enemy can sustain
-    private static int EDV = 5; // enemy dodge value
+    private static int EDV = 0; // enemy dodge value
     private static int EGun = 0; // enemy gun bonus
-    private static int EDefence = 1; // enemy armor
+    private static int EDefence = 5; // enemy armor
     private static int MISS = 2; // Where 0 = a miss and 1 = is a glance and 2 = nil.
 	private static Scanner scanner;
 	private static String userInput;
 	private static boolean gameRunning = true;
 	private static String[] userActionsArray;
 	public static void main(String[] args) throws IOException {
-		
 		//Initializes input object for text input
 		scanner = new Scanner(System.in);
 //		userActionsArray = CharacterCommands.getCharacterCommands();
 		userInput = "";
 		
 		//Define your game player here (health/name/description/etc...
-		int damage = 0;
 		
 		//Define your enemy here (health/name/description/etc...
 		
@@ -57,8 +56,8 @@ public class MainGame {
 			
 			userInput = getUserInput("Enter Input: ");
 			
-			if(userInput == "fire" || userInput == "Fire" || userInput == "FIRE")
-				damage = returnNB(EDV, Gun, EDefence);
+			if(userInput == "fire" || userInput == "Fire" || userInput == "FIRE") {
+			 returnDAMAGE(EDV, Gun, EDefence); }
 			
 			if(MISS == 0) outputText("BOOM! The gun fires, but the shell goes wide, missing the enemy entirely!" , 50);
 			else if(MISS == 1) outputText("KABLAM! The gun fires, but the shell merely glances off the enemy armor!",50);
@@ -116,20 +115,20 @@ public class MainGame {
 	
 	
 	
-	public static int returnNB(int Dv, int Guns, int Armor)
+	public static void returnDAMAGE(int Dv, int Guns, int Armor) // calculates the damage, not actually returning anything, just setting a variable.
 	{
 		int random = (int )(Math.random() * 20 + 1);
 		
 		if((random + Guns) > Dv) {
-		int damage = (int )(Math.random() * 8 + 1);
+		int damage1 = (int )(Math.random() * 8 + 1);
 		
-		if(((damage + Guns) - Armor) <= 0) MISS = 1;
+		if(((damage1 + Guns) - Armor) <= 0) MISS = 1;
 		
 		else MISS = 2;
-		return ((damage + Guns) - Armor);
+		damage = ((damage1 + Guns) - Armor);
 		}
 		else {MISS = 0;
-	    return 0;}
+	    damage = 0;}
 	}
 	public static void getStats(int EB)  // Where EB represents the number of crew.
 	{
