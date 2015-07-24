@@ -14,6 +14,8 @@ import java.util.Scanner;
  */
 public class MainGame {
 	
+	private static int numofitems = 0;
+	
 	private static int[] items = new int [10]; // This tells whether or not you have an item.
 	
 	private static String[] itemDescrStrings = new String [10]; // This describes the items name and discription.
@@ -83,6 +85,7 @@ public class MainGame {
 			} else
 				outputText("What?", 50);
 			if (enemyCrew > 0) {
+				outputText("The Sulphoric gun turns toward you,",50);
 				returnDAMAGE(DV, EGun, Defence);
 
 				damageOutput("your");
@@ -496,14 +499,14 @@ private static void endMessage(int round) // once again, just clearing the main 
 	    	userInput = getUserInput("Enter Input: ");
 		
 	    	
-	    	  if(userInput.equals("9")) end = true;
+	    
 	    	  
-	    	  else if(userInput.equals("4") || userInput.equals("2")) scrapprice =	getItemPrice(userInput,0);
+	    	   if(userInput.equals("4") || userInput.equals("2")) scrapprice =	getItemPrice(userInput,0);
 	    else price = getItemPrice(userInput,0);
 	    	
 	   
 	  
-	    if(gold < price || scrap < scrapprice)
+	    	   if(gold < price || scrap < scrapprice)
 			System.out.println("You don't have enough stuff for that");
 	   
 	    else if(userInput.equals("4"))
@@ -518,12 +521,14 @@ private static void endMessage(int round) // once again, just clearing the main 
 	    else if(userInput.equals("5")) {gold -= 10;
 	    Crew += 1;}
 	    
-	    else addItem(Integer.parseInt(userInput),1,Integer.parseInt(userInput), getItemDescr(userInput) );
+	    else if(userInput.equals("9")) end = true;
+	    	   
+	    else { addItem(Integer.parseInt(userInput),numofitems,Integer.parseInt(userInput), getItemDescr(userInput) );
 	    
-        listItems();}
+       listItems();}
+		numofitems++;
 		}
-		
-		
+			} 
 		public static void UpgradeTank()
 		{
 			System.out.println("Which stat would you like to upgrade?");
