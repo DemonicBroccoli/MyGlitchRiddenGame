@@ -464,10 +464,10 @@ private static void endMessage(int round) // once again, just clearing the main 
 	}
 		private static void listItems()
 		{
-			for(int I = 0;I <= items.length;I++)
+			for(int I = 0;I  <	items.length;I++)
 			{
 				if(itemDescrStrings[I] != null && items[I] != 0)
-					System.out.println(("Item " + items[I] + ": " + itemDescrStrings));
+					System.out.println(("Item " + items[I] + ": " + itemDescrStrings[I]));
 			}
 		}
 		
@@ -477,6 +477,8 @@ private static void endMessage(int round) // once again, just clearing the main 
 			boolean end = false;
 			while(!end)
 			{
+				gold = Gold;
+				scrap = Scrap;
 			int scrapprice = 0;
 			int price = 0;
 			
@@ -493,7 +495,7 @@ private static void endMessage(int round) // once again, just clearing the main 
 	        System.out.println("8. Party hats == 4 gold coins" );
 	        System.out.println("9. Leave Shop Without Buying anything.");
 	        System.out.println("================================================================================");
-	        System.out.println("You have " + gold + " gold coins, You have " + scrap + " scrap" );
+	        System.out.println("You have " + Gold + " gold coins, You have " + Scrap + " scrap" );
 	        System.out.println("================================================================================");
 	        System.out.println("Please Enter the number of your choice.");
 	    	userInput = getUserInput("Enter Input: ");
@@ -506,27 +508,30 @@ private static void endMessage(int round) // once again, just clearing the main 
 	    	
 	   
 	  
-	    	   if(gold < price || scrap < scrapprice)
+	    	   if(Gold < price || Scrap < scrapprice)
 			System.out.println("You don't have enough stuff for that");
 	   
 	    else if(userInput.equals("4"))
 		    UpgradeTank();
 	    
-	    else if(userInput.equals("2")) {gold += 10;
+	    else if(userInput.equals("2")) {Gold += 10;
 	    scrap -= 20;}
 	    
-	    else if(userInput.equals("3")) {gold -= 20;
+	    else if(userInput.equals("3")) {Gold -= 20;
 	    scrap += 10;}
 	    
-	    else if(userInput.equals("5")) {gold -= 10;
-	    Crew += 1;}
+	    else if(userInput.equals("5")) {Gold -= 10;
+	    Crew += 1;
+	    System.out.println("You now have " + Crew + " Crew.");}
 	    
 	    else if(userInput.equals("9")) end = true;
 	    	   
-	    else { addItem(Integer.parseInt(userInput),numofitems,Integer.parseInt(userInput), getItemDescr(userInput) );
+	    else { addItem(numofitems,1,numofitems,getItemDescr(userInput) );
 	    
-       listItems();}
-		numofitems++;
+       listItems();
+       Gold -= price;
+		numofitems++;}
+
 		}
 			} 
 		public static void UpgradeTank()
@@ -536,11 +541,11 @@ private static void endMessage(int round) // once again, just clearing the main 
 			
 			userInput = getUserInput("Enter Input: ");
 			if(userInput.equals("1")) {upgradeDV += 1;
-			Scrap -= 10;}
+			Scrap = Scrap - 10;}
 			else if(userInput.equals("2")) {upgradeGun += 1;
-			Scrap -= 10;}
+			Scrap = Scrap - 10;}
 			else if(userInput.equals("3")) {upgradeDefence += 1;
-			Scrap -= 10;
+			Scrap = Scrap - 10;
 			}
 			else outputText("Nah, I have no idea what you just said.",50);
 		}
